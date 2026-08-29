@@ -1,9 +1,9 @@
 -- Datos de prueba para DevBoard.
--- Ejecutar después de schema.sql o de las migraciones de Prisma.
--- !Ojo¡ limpia y reinicia las tablas antes de insertar.
+-- Ejecutar despues de schema.sql o de las migraciones de Prisma.
+-- Ojo: limpia y reinicia las tablas antes de insertar.
 
 -- LIMPIEZA
-
+SET client_encoding = 'UTF8';
 TRUNCATE TABLE tasks RESTART IDENTITY CASCADE;
 TRUNCATE TABLE categories RESTART IDENTITY CASCADE;
 
@@ -20,8 +20,8 @@ INSERT INTO categories (name, color) VALUES
 INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
 
   -- PENDING (9 tareas)
-  ('Corregir validación del formulario de login',
-   'El campo de email permite cadenas sin formato válido.',
+  ('Corregir validacion del formulario de login',
+   'El campo de email permite cadenas sin formato valido.',
    'pending', 1,
    NOW() - INTERVAL '30 days'),
 
@@ -31,12 +31,12 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    NOW() - INTERVAL '28 days'),
 
   ('Mejorar tiempo de respuesta en listado de tareas',
-   'El endpoint tarda más de 800ms con 1000 registros. Revisar índices.',
+   'El endpoint tarda más de 800ms con 1000 registros. Revisar indices.',
    'pending', 3,
    NOW() - INTERVAL '26 days'),
 
-  ('Validar longitud máxima del campo título',
-   'El backend no rechaza títulos de más de 120 caracteres.',
+  ('Validar longitud maxima del campo titulo',
+   'El backend no rechaza titulos de mas de 120 caracteres.',
    'pending', 1,
    NOW() - INTERVAL '24 days'),
 
@@ -46,7 +46,7 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    NOW() - INTERVAL '22 days'),
 
   ('Revisar contraste de colores en modo oscuro',
-   'Varios textos no cumplen el ratio mínimo WCAG AA.',
+   'Varios textos no cumplen el ratio minimo WCAG AA.',
    'pending', 3,
    NOW() - INTERVAL '20 days'),
 
@@ -55,7 +55,7 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    'pending', NULL,
    NOW() - INTERVAL '18 days'),
 
-  ('Agregar índice a la columna status en tasks',
+  ('Agregar indice a la columna status en tasks',
    NULL,
    'pending', NULL,
    NOW() - INTERVAL '16 days'),
@@ -67,7 +67,7 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
 
   -- IN PROGRESS (9 tareas)
   ('Implementar filtro por estado en GET /api/tasks',
-   'El parámetro status debe filtrarse en SQL, no en memoria.',
+   'El parametro status debe filtrarse en SQL, no en memoria.',
    'in_progress', 2,
    NOW() - INTERVAL '29 days'),
 
@@ -81,7 +81,7 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    'in_progress', 3,
    NOW() - INTERVAL '25 days'),
 
-  ('Implementar búsqueda por título con debounce',
+  ('Implementar busqueda por título con debounce',
    'El parámetro q debe hacer ILIKE en PostgreSQL con debounce de 300ms.',
    'in_progress', 2,
    NOW() - INTERVAL '23 days'),
@@ -92,7 +92,7 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    NOW() - INTERVAL '21 days'),
 
   ('Refactorizar TasksRepository para separar queries',
-   'Actualmente el servicio tiene queries directas mezcladas con lógica.',
+   'Actualmente el servicio tiene queries directas mezcladas con logica.',
    'in_progress', 3,
    NOW() - INTERVAL '19 days'),
 
@@ -113,7 +113,7 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
 
   -- COMPLETED (7 tareas)
   ('Crear estructura inicial del monorepo',
-   'Carpetas backend y frontend con configuración base.',
+   'Carpetas backend y frontend con configuracion base.',
    'completed', NULL,
    NOW() - INTERVAL '31 days'),
 
@@ -127,8 +127,8 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    'completed', 2,
    NOW() - INTERVAL '27 days'),
 
-  ('Implementar POST /api/tasks con validación Zod',
-   'Título obligatorio, descripción opcional, categoryId validado.',
+  ('Implementar POST /api/tasks con validacion Zod',
+   'Titulo obligatorio, descripcion opcional, categoryId validado.',
    'completed', 2,
    NOW() - INTERVAL '25 days'),
 
@@ -143,6 +143,6 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    NOW() - INTERVAL '21 days'),
 
   ('Escribir seed.sql con 25 tareas de prueba',
-   'Distribuidas entre los 3 estados y las 3 categorías.',
+   'Distribuidas entre los 3 estados y las 3 categorias.',
    'completed', 3,
    NOW() - INTERVAL '19 days');

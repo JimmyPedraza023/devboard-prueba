@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: devboard-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: devboard_user
+      POSTGRES_PASSWORD: devboard_pass
+      POSTGRES_DB: devboard
+    ports:
+      - '5432:5432'
+    volumes:
+      - devboard_data:/var/lib/postgresql/data
+
+volumes:
+  devboard_data:

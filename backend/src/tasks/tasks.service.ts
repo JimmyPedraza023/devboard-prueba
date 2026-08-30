@@ -3,14 +3,8 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-
-import {
-  TasksRepository,
-  TaskWithCategory,
-} from './tasks.repository';
-
+import { TasksRepository } from './tasks.repository';
 import { PrismaService } from '../common/prisma/prisma.service';
-
 import {
   CreateTaskDto,
   PatchTaskDto,
@@ -18,14 +12,6 @@ import {
   TaskResponse,
   UpdateTaskDto,
 } from './dto/task.dto';
-
-// Tipo explícito para la metadata de paginación.
-type PaginationMeta = {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-};
 
 @Injectable()
 export class TasksService {
@@ -37,21 +23,13 @@ export class TasksService {
   // FIND ALL
   async findAll(
     query: TaskQueryDto,
-  ): Promise<{
-    data: TaskResponse[];
-    meta: PaginationMeta;
-  }> {
-    const { tasks, total } =
-      await this.tasksRepository.findAll(query);
+  ): Promise<{ data: TaskResponse[]; meta: object }> {
+    const { tasks, total } = await this.tasksRepository.findAll(query);
 
-    const totalPages = Math.ceil(
-      total / query.limit,
-    );
+    const totalPages = Math.ceil(total / query.limit);
 
     return {
-      data: tasks.map((task) =>
-        this.toResponse(task),
-      ),
+      data: tasks.map((task) => this.toResponse(task)),
       meta: {
         page: query.page,
         limit: query.limit,
@@ -63,110 +41,67 @@ export class TasksService {
 
   // FIND ONE
   async findOne(id: number): Promise<TaskResponse> {
-    const task =
-      await this.tasksRepository.findOne(id);
+    const task = await this.tasksRepository.findOne(id);
 
     if (!task) {
-      throw new NotFoundException(
-        `No existe una tarea con el id ${id}.`,
-      );
+      throw new NotFoundException(`No existe una tarea con el id ${id}.`);
     }
 
     return this.toResponse(task);
   }
 
   // CREATE
-  async create(
-    dto: CreateTaskDto,
-  ): Promise<TaskResponse> {
-    if (
-      dto.categoryId !== undefined &&
-      dto.categoryId !== null
-    ) {
-      await this.assertCategoryExists(
-        dto.categoryId,
-      );
+  async create(dto: CreateTaskDto): Promise<TaskResponse> {
+    if (dto.categoryId) {
+      await this.assertCategoryExists(dto.categoryId);
     }
 
-    const task =
-      await this.tasksRepository.create(dto);
-
+    const task = await this.tasksRepository.create(dto);
     return this.toResponse(task);
   }
 
   // UPDATE — PUT
-  async update(
-    id: number,
-    dto: UpdateTaskDto,
-  ): Promise<TaskResponse> {
+  async update(id: number, dto: UpdateTaskDto): Promise<TaskResponse> {
     await this.assertTaskExists(id);
 
-    if (
-      dto.categoryId !== undefined &&
-      dto.categoryId !== null
-    ) {
-      await this.assertCategoryExists(
-        dto.categoryId,
-      );
+    if (dto.categoryId) {
+      await this.assertCategoryExists(dto.categoryId);
     }
 
-    const task =
-      await this.tasksRepository.update(id, dto);
-
+    const task = await this.tasksRepository.update(id, dto);
     return this.toResponse(task);
   }
 
   // PATCH
-  async patch(
-    id: number,
-    dto: PatchTaskDto,
-  ): Promise<TaskResponse> {
+  async patch(id: number, dto: PatchTaskDto): Promise<TaskResponse> {
     await this.assertTaskExists(id);
 
-    if (
-      dto.categoryId !== undefined &&
-      dto.categoryId !== null
-    ) {
-      await this.assertCategoryExists(
-        dto.categoryId,
-      );
+    if (dto.categoryId) {
+      await this.assertCategoryExists(dto.categoryId);
     }
 
-    const task =
-      await this.tasksRepository.patch(id, dto);
-
+    const task = await this.tasksRepository.patch(id, dto);
     return this.toResponse(task);
   }
 
   // DELETE
   async remove(id: number): Promise<void> {
     await this.assertTaskExists(id);
-
     await this.tasksRepository.remove(id);
   }
 
   // HELPERS PRIVADOS
-  private async assertTaskExists(
-    id: number,
-  ): Promise<void> {
-    const task =
-      await this.tasksRepository.findOne(id);
-
+  private async assertTaskExists(id: number): Promise<void> {
+    const task = await this.tasksRepository.findOne(id);
     if (!task) {
-      throw new NotFoundException(
-        `No existe una tarea con el id ${id}.`,
-      );
+      throw new NotFoundException(`No existe una tarea con el id ${id}.`);
     }
   }
 
-  private async assertCategoryExists(
-    categoryId: number,
-  ): Promise<void> {
-    const category =
-      await this.prisma.category.findUnique({
-        where: { id: categoryId },
-      });
-
+  private async assertCategoryExists(categoryId: number): Promise<void> {
+    const category = await this.prisma.category.findUnique({
+      where: { id: categoryId },
+    });
     if (!category) {
       throw new BadRequestException(
         `No existe una categoría con el id ${categoryId}.`,
@@ -174,16 +109,13 @@ export class TasksService {
     }
   }
 
-  // MAPEO A RESPUESTA DEL API
-  private toResponse(
-    task: TaskWithCategory,
-  ): TaskResponse {
+  // MAPEO A TIPO DE RESPUESTA
+  private toResponse(task: any): TaskResponse {
     return {
       id: task.id,
       title: task.title,
-      description: task.description,
+      description: task.description ?? null,
       status: task.status,
-
       category: task.category
         ? {
             id: task.category.id,
@@ -191,12 +123,12 @@ export class TasksService {
             color: task.category.color,
           }
         : null,
-
-      createdAt:
-        task.createdAt.toISOString(),
-
-      updatedAt:
-        task.updatedAt.toISOString(),
+      createdAt: task.createdAt instanceof Date
+        ? task.createdAt.toISOString()
+        : String(task.createdAt),
+      updatedAt: task.updatedAt instanceof Date
+        ? task.updatedAt.toISOString()
+        : String(task.updatedAt),
     };
   }
 }

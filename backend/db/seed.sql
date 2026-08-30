@@ -26,12 +26,12 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    NOW() - INTERVAL '30 days'),
 
   ('Agregar endpoint GET /api/health',
-   'Debe verificar la conexión a la base de datos y retornar 200 o 503.',
+   'Debe verificar la conexion a la base de datos y retornar 200 o 503.',
    'pending', 2,
    NOW() - INTERVAL '28 days'),
 
   ('Mejorar tiempo de respuesta en listado de tareas',
-   'El endpoint tarda más de 800ms con 1000 registros. Revisar indices.',
+   'El endpoint tarda mas de 800ms con 1000 registros. Revisar indices.',
    'pending', 3,
    NOW() - INTERVAL '26 days'),
 
@@ -40,7 +40,7 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    'pending', 1,
    NOW() - INTERVAL '24 days'),
 
-  ('Implementar paginación en el frontend',
+  ('Implementar paginacion en el frontend',
    'Actualmente se cargan todas las tareas sin paginar.',
    'pending', 2,
    NOW() - INTERVAL '22 days'),
@@ -81,12 +81,12 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    'in_progress', 3,
    NOW() - INTERVAL '25 days'),
 
-  ('Implementar busqueda por título con debounce',
-   'El parámetro q debe hacer ILIKE en PostgreSQL con debounce de 300ms.',
+  ('Implementar busqueda por titulo con debounce',
+   'El parametro q debe hacer ILIKE en PostgreSQL con debounce de 300ms.',
    'in_progress', 2,
    NOW() - INTERVAL '23 days'),
 
-  ('Corregir foreign key al asignar categoría inexistente',
+  ('Corregir foreign key al asignar categoria inexistente',
    'El backend retorna 500 en lugar de 400.',
    'in_progress', 1,
    NOW() - INTERVAL '21 days'),
@@ -101,7 +101,7 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    'in_progress', NULL,
    NOW() - INTERVAL '17 days'),
 
-  ('Implementar ordenamiento por título en GET /api/tasks',
+  ('Implementar ordenamiento por titulo en GET /api/tasks',
    NULL,
    'in_progress', 2,
    NOW() - INTERVAL '15 days'),
@@ -123,7 +123,7 @@ INSERT INTO tasks (title, description, status, category_id, created_at) VALUES
    NOW() - INTERVAL '29 days'),
 
   ('Definir schema de base de datos con Prisma',
-   'Modelos Task y Category con enums, índices y trigger de updated_at.',
+   'Modelos Task y Category con enums, indices y trigger de updated_at.',
    'completed', 2,
    NOW() - INTERVAL '27 days'),
 

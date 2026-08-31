@@ -1,11 +1,6 @@
 import type { TaskStatus } from '@/types'
 
-interface StatusBadgeProps {
-  status: TaskStatus
-  className?: string
-}
-
-const STATUS_CONFIG: Record<
+export const STATUS_CONFIG: Record<
   TaskStatus,
   { label: string; className: string }
 > = {
@@ -22,17 +17,3 @@ const STATUS_CONFIG: Record<
     className: 'bg-green-100 text-green-800 border border-green-200',
   },
 }
-
-export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
-  const config = STATUS_CONFIG[status]
-
-  return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${config.className} ${className}`}
-    >
-      {config.label}
-    </span>
-  )
-}
-
-export { STATUS_CONFIG }

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "DevBoard Data Flow",
+    "subtitle": "React + NestJS + Prisma + PostgreSQL",
+    "output": "devboard-dataflow.html",
+    "viewBox": [1080, 640],
+    "animation": "trace",
+    "quality_profile": "standard"
+  },
+  "stages": [
+    { "label": "Client" },
+    { "label": "Frontend" },
+    { "label": "HTTP" },
+    { "label": "Backend" },
+    { "label": "Store" }
+  ],
+  "nodes": [
+    { "id": "user", "type": "frontend", "label": "User", "sublabel": "browser", "stage": 0, "row": 0, "tag": "interaction" },
+    { "id": "app", "type": "frontend", "label": "React UI", "sublabel": "App / Components", "stage": 1, "row": 2, "tag": "Vite + TS + Tailwind" },
+    { "id": "query", "type": "backend", "label": "React Query + Axios", "sublabel": "hooks / cache + HTTP", "stage": 2, "row": 0, "tag": "TanStack v5" },
+    { "id": "backend", "type": "backend", "label": "NestJS", "sublabel": "Controller / Service / Repository", "stage": 3, "row": 2, "tag": "REST + Zod + Prisma", "width": 140 },
+    { "id": "pg", "type": "database", "label": "PostgreSQL", "sublabel": "tasks + categories", "stage": 4, "row": 0, "tag": "Docker 5433" }
+  ],
+  "flows": [
+    { "id": "user-app", "from": "user", "to": "app", "label": "search / filter / CRUD", "classification": "user intent", "variant": "emphasis", "route": "auto", "labelAt": [206, 262] },
+    { "id": "app-query", "from": "app", "to": "query", "label": "query params + mutations", "classification": "debounced + invalidate", "variant": "default", "route": "auto", "labelAt": [418, 262] },
+    { "id": "query-backend", "from": "query", "to": "backend", "label": "HTTP /api/*  GET POST PUT PATCH DELETE", "classification": "JSON over HTTP", "variant": "emphasis", "route": "auto", "labelAt": [655, 262] },
+    { "id": "backend-pg", "from": "backend", "to": "pg", "label": "Prisma SQL  $queryRaw + CRUD", "classification": "validate + assert", "variant": "emphasis", "route": "auto", "labelAt": [876, 262] },    { "id": "pg-backend", "from": "pg", "to": "backend", "label": "rows / trigger", "classification": "updated_at trigger", "variant": "dashed", "route": "auto", "labelAt": [900, 428] }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Read path",
+      "items": [
+        "Query keys encode q, status, page, limit and coexist independently in cache",
+        "Backend builds filtered SQL with ILIKE search and LEFT JOIN on categories",
+        "COUNT(*) runs with the same WHERE clause to compute pagination meta"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Write path",
+      "items": [
+        "Every mutation invalidates all ['tasks'] queries to force a refetch",
+        "Zod schemas trim, coerce and strip fields before controllers run",
+        "PostgreSQL trigger sets updated_at automatically on every row change"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Error & trust",
+      "items": [
+        "Global HttpExceptionFilter normalizes failures into { error: { code, message, details } }",
+        "Tasks and categories live in PostgreSQL with ON DELETE SET NULL on category",
+        "Categories cache with staleTime Infinity since they are static seed data"
+      ]
+    }
+  ]
+}
